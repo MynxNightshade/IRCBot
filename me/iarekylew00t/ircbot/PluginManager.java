@@ -18,4 +18,12 @@ public final class PluginManager {
 	public static void removePlugin(IRCPlugin plugin) {
 		_PLUGINS.remove(plugin);
 	}
+	
+	public static void removePluginByName(String name) {
+		for (IRCPlugin plugin : _PLUGINS) {
+			if (plugin.getName().equals(name)) {
+				_PLUGINS.remove(plugin);
+			}
+		}
+	}
 }

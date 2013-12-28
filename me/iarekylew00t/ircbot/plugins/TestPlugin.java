@@ -7,7 +7,7 @@ import org.pircbotx.hooks.events.MessageEvent;
 import me.iarekylew00t.ircbot.hooks.IRCPlugin;
 
 public class TestPlugin extends IRCPlugin {
-	private static String _NAME = "TestPlugin", _VER = "1.0.0";
+	private static final String _NAME = "TestPlugin", _VER = "1.0.0";
 	private static HashMap _CMDS;
 	
 	public TestPlugin() {

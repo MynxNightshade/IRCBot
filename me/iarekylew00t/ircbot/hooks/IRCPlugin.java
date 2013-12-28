@@ -10,7 +10,7 @@ public class IRCPlugin extends ListenerAdapter {
 	private static String _NAME, _VER;
 	private static HashMap _CMDS;
 	private static Object[] _PARAMS;
-	private static boolean isEnabled = false;
+	private static boolean _ENABLED = false;
 	
 	public IRCPlugin(String name, String version, HashMap commands) {
 		this(name, version, commands, new Object[0]);
@@ -26,13 +26,13 @@ public class IRCPlugin extends ListenerAdapter {
 			this.onEnable(); //Automatically run onEnable()
 			//TODO Display Startup info
 			PluginManager.addPlugin(this);
-			isEnabled = true;
+			_ENABLED = true;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			this.onDisable(); //Automatically run onDisable() if an error occurs
 			//TODO Display Shutdown info 
 			PluginManager.removePlugin(this);
-			isEnabled = false;
+			_ENABLED = false;
 		}
 	}
 	
@@ -43,7 +43,7 @@ public class IRCPlugin extends ListenerAdapter {
 	}
 	
 	public boolean isEnabled() {
-		return isEnabled;
+		return _ENABLED;
 	}
 	
 	public String getName() {
