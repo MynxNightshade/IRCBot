@@ -16,6 +16,7 @@ public class TestPlugin extends IRCPlugin {
 	
 	@Override
 	public void onEnable() {
+		this.getLogger().info("[TestPlugin] This is a test");
 	}
 	
 	@Override
