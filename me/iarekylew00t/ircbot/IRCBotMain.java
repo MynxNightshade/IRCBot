@@ -24,11 +24,14 @@ public class IRCBotMain {
 			.setNickservPassword(!config.getProperty("nickPass").isEmpty() ? config.getProperty("nickPass") : null)
 			.setServer(config.getProperty("server"), Integer.parseInt(config.getProperty("port")), config.getProperty("serverPass"))
 			.addAutoJoinChannel(config.getProperty("channel"))
-			/* Enable Plugins */
-			.addListener(new TestPlugin()) //Test
 			.buildConfiguration();
 		IRCBot bot = new IRCBot(botConfig);
 		bot.setVersion("2.1.0_alpha");
-		bot.startBot();
+		bot.getLogger().info("===== STARTING ARADIABOT V" + bot.getVersion() + " =====");
+		
+		/* BEGIN PLUGINS */
+		bot.getConfiguration().getListenerManager().addListener(new TestPlugin());
+		
+		bot.startBot(); //transformers roll out
 	}
 }
