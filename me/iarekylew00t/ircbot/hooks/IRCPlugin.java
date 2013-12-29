@@ -27,12 +27,12 @@ public class IRCPlugin extends ListenerAdapter {
 		_CMDS = commands;
 		_PARAMS = params;
 		try {
-			_LOG.info("Enabling " + name + "v" + version);
+			_LOG.info("Enabling " + name + " v" + version);
 			this.onEnable(); //Automatically run onEnable()
 			PluginManager.addPlugin(this);
 			_ENABLED = true;
 		} catch (Exception ex) {
-			_LOG.warn("Disabling " + name + "v" + version);
+			_LOG.warn("Disabling " + name + " v" + version);
 			_LOG.error("" + ex);
 			this.onDisable(); //Automatically run onDisable() if an error occurs
 			PluginManager.removePlugin(this);
@@ -40,7 +40,7 @@ public class IRCPlugin extends ListenerAdapter {
 		}
 	}
 	
-	public void onEnable() {
+	public void onEnable() throws Exception {
 	}
 	
 	public void onDisable() {
