@@ -31,6 +31,7 @@ public class IRCBotMain {
 		
 		/* BEGIN PLUGINS */
 		bot.getConfiguration().getListenerManager().addListener(new TestPlugin());
+		bot.getConfiguration().getListenerManager().addListener(new Messenger());
 		
 		bot.startBot(); //transformers roll out
 	}
