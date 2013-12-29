@@ -2,10 +2,19 @@ package me.iarekylew00t.ircbot;
 
 import java.util.ArrayList;
 
+import org.slf4j.Logger;
+
 import me.iarekylew00t.ircbot.hooks.IRCPlugin;
 
 public final class PluginManager {
 	private static ArrayList<IRCPlugin> _PLUGINS = new ArrayList<IRCPlugin>();
+	private static IRCBot _BOT;
+	private static Logger _LOG;
+	
+	public PluginManager(IRCBot ircBot) {
+		_BOT = ircBot;
+		_LOG = ircBot.getLogger();
+	}
 	
 	public static int totalPlugins() {
 		return _PLUGINS.size();
@@ -25,5 +34,13 @@ public final class PluginManager {
 				_PLUGINS.remove(plugin);
 			}
 		}
+	}
+	
+	public static IRCBot getBot() {
+		return _BOT;
+	}
+	
+	public static Logger getLogger() {
+		return _LOG;
 	}
 }

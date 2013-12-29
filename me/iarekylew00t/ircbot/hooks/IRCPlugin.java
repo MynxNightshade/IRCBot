@@ -2,14 +2,18 @@ package me.iarekylew00t.ircbot.hooks;
 
 import java.util.HashMap;
 
+import me.iarekylew00t.ircbot.IRCBot;
 import me.iarekylew00t.ircbot.PluginManager;
 
 import org.pircbotx.hooks.ListenerAdapter;
+import org.slf4j.Logger;
 
 public class IRCPlugin extends ListenerAdapter {
 	private static String _NAME, _VER;
 	private static HashMap _CMDS;
 	private static Object[] _PARAMS;
+	private static IRCBot _BOT = PluginManager.getBot();
+	private static Logger _LOG = PluginManager.getLogger();
 	private static boolean _ENABLED = false;
 	
 	public IRCPlugin(String name, String version, HashMap commands) {
@@ -23,14 +27,14 @@ public class IRCPlugin extends ListenerAdapter {
 		_CMDS = commands;
 		_PARAMS = params;
 		try {
+			_LOG.info("Enabling " + name + "v" + version);
 			this.onEnable(); //Automatically run onEnable()
-			//TODO Display Startup info
 			PluginManager.addPlugin(this);
 			_ENABLED = true;
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			_LOG.warn("Disabling " + name + "v" + version);
+			_LOG.error("" + ex);
 			this.onDisable(); //Automatically run onDisable() if an error occurs
-			//TODO Display Shutdown info 
 			PluginManager.removePlugin(this);
 			_ENABLED = false;
 		}
@@ -64,5 +68,13 @@ public class IRCPlugin extends ListenerAdapter {
 	
 	public Object getParam(int index) {
 		return _PARAMS[index];
+	}
+	
+	public IRCBot getBot() {
+		return _BOT;
+	}
+	
+	public Logger getLogger() {
+		return _LOG;
 	}
 }

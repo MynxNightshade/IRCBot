@@ -7,10 +7,11 @@ import org.slf4j.LoggerFactory;
 
 public class IRCBot extends PircBotX {
 	private static String _VER = "1.0.0";
-	private final Logger _LOG = LoggerFactory.getLogger(this.getClass()); //WIP
+	private final static Logger _LOG = LoggerFactory.getLogger(IRCBot.class);
 
 	public IRCBot(Configuration configuration) {
 		super(configuration);
+		new PluginManager(this);
 	}
 	
 	public void setVersion(String version) {
@@ -22,6 +23,6 @@ public class IRCBot extends PircBotX {
 	}
 	
 	public Logger getLogger() {
-		return this._LOG;
+		return _LOG;
 	}
 }
