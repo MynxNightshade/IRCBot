@@ -1,13 +1,15 @@
 package me.iarekylew00t.ircbot;
 
+import me.iarekylew00t.ircbot.managers.PluginManager;
+
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class IRCBot extends PircBotX {
-	private static String _VER = "1.0.0";
-	private final static Logger _LOG = LoggerFactory.getLogger(IRCBot.class);
+	private String _VER = "1.0.0";
+	private final Logger _LOG = LoggerFactory.getLogger(IRCBot.class);
 
 	public IRCBot(Configuration configuration) {
 		super(configuration);
@@ -15,14 +17,14 @@ public class IRCBot extends PircBotX {
 	}
 	
 	public void setVersion(String version) {
-		_VER = version;
+		this._VER = version;
 	}
 	
 	public String getVersion() {
-		return _VER;
+		return this._VER;
 	}
 	
 	public Logger getLogger() {
-		return _LOG;
+		return this._LOG;
 	}
 }
