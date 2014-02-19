@@ -5,43 +5,69 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 
 import me.iarekylew00t.ircbot.IRCBot;
+import me.iarekylew00t.ircbot.exceptions.PluginException;
 import me.iarekylew00t.ircbot.hooks.IRCPlugin;
 
 public final class PluginManager {
-	private static ArrayList<IRCPlugin> _PLUGINS = new ArrayList<IRCPlugin>();
-	private static IRCBot _BOT;
-	private static Logger _LOG;
+	private static ArrayList<IRCPlugin> PLUGINS = new ArrayList<IRCPlugin>();
+	private static IRCBot BOT;
+	private static Logger LOG;
 	
 	public PluginManager(IRCBot ircBot) {
-		_BOT = ircBot;
-		_LOG = ircBot.getLogger();
+		BOT = ircBot;
+		LOG = ircBot.getLogger();
 	}
 	
 	public static int totalPlugins() {
-		return _PLUGINS.size();
+		return PLUGINS.size();
 	}
 	
-	public static void addPlugin(IRCPlugin plugin) {
-		_PLUGINS.add(plugin);
+	public static void addPlugin(IRCPlugin plugin) throws PluginException {
+		if (!PLUGINS.contains(plugin)) {
+			PLUGINS.add(plugin);
+		}
+		throw new PluginException(plugin + " is already a valid plugin");
 	}
 	
-	public static void removePlugin(IRCPlugin plugin) {
-		_PLUGINS.remove(plugin);
+	public static void removePlugin(IRCPlugin plugin) throws PluginException {
+		if (!PLUGINS.contains(plugin)) {
+			PLUGINS.remove(plugin);
+		}
+		throw new PluginException(plugin.getName() + " is not a valid plugin");
 	}
 	
-	public static void removePluginByName(String name) {
-		for (IRCPlugin plugin : _PLUGINS) {
+	public static void removePluginByName(String name) throws PluginException {
+		for (IRCPlugin plugin : PLUGINS) {
 			if (plugin.getName().equals(name)) {
-				_PLUGINS.remove(plugin);
+				PLUGINS.remove(plugin);
 			}
 		}
+		throw new PluginException(name + " is not a valid plugin");
+	}
+	
+	public static IRCPlugin getPluginByName(String name) throws PluginException {
+		for (IRCPlugin plugin : PLUGINS) {
+			if (plugin.getName().equals(name)) {
+				return plugin;
+			}
+		}
+		throw new PluginException(name + " is not a valid plugin");
+	}
+	
+	public static boolean isValidPlugin(String name) {
+		for (IRCPlugin plugin : PLUGINS) {
+			if (plugin.getName().equals(name)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public static IRCBot getBot() {
-		return _BOT;
+		return BOT;
 	}
 	
 	public static Logger getLogger() {
-		return _LOG;
+		return LOG;
 	}
 }
