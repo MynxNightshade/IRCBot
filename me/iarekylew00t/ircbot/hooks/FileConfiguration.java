@@ -6,22 +6,22 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class FileConfiguration {
-	private static Properties _PROPS = new Properties();
-	private static File _CONFIG;
+	private static Properties PROPS = new Properties();
+	private static File CONFIG;
 	
 	public FileConfiguration(File config) throws IOException {
-		_CONFIG = config;
-		if (!_CONFIG.exists()) {
-			_CONFIG.createNewFile();
+		CONFIG = config;
+		if (!CONFIG.exists()) {
+			CONFIG.createNewFile();
 		}
-		_PROPS.load(new FileInputStream(_CONFIG));
+		PROPS.load(new FileInputStream(CONFIG));
 	}
 	
 	public String getProperty(String prop) {
-		return _PROPS.getProperty(prop);
+		return PROPS.getProperty(prop);
 	}
 	
 	public String getProperty(String prop, String defaultVal) {
-		return _PROPS.getProperty(prop, defaultVal);
+		return PROPS.getProperty(prop, defaultVal);
 	}
 }

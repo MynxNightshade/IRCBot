@@ -8,8 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class IRCBot extends PircBotX {
-	private String _VER = "1.0.0";
-	private final Logger _LOG = LoggerFactory.getLogger(IRCBot.class);
+	private String VER = "1.0.0";
+	private final Logger LOG = LoggerFactory.getLogger(IRCBot.class);
 
 	public IRCBot(Configuration configuration) {
 		super(configuration);
@@ -17,14 +17,14 @@ public class IRCBot extends PircBotX {
 	}
 	
 	public void setVersion(String version) {
-		this._VER = version;
+		this.VER = version;
 	}
 	
 	public String getVersion() {
-		return this._VER;
+		return this.VER;
 	}
 	
 	public Logger getLogger() {
-		return this._LOG;
+		return this.LOG;
 	}
 }
