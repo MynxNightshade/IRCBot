@@ -1,7 +1,7 @@
 package me.iarekylew00t.ircbot;
 
 import me.iarekylew00t.ircbot.hooks.IRCPlugin;
-import me.iarekylew00t.ircbot.managers.DataManager;
+import me.iarekylew00t.ircbot.hooks.PluginManager;
 
 import org.pircbotx.Channel;
 import org.pircbotx.Configuration;
@@ -11,55 +11,70 @@ import org.slf4j.LoggerFactory;
 
 public class IRCBot extends PircBotX {
 	private String VER = "1.0.0";
+	private PluginManager PLUGINS;
 	private final Logger LOG = LoggerFactory.getLogger(IRCBot.class);
 
 	public IRCBot(Configuration configuration) {
 		super(configuration);
-		new DataManager(this);
+		this.PLUGINS = new PluginManager(this); //Added for security reasons
 	}
 	
 	public void addPlugin(IRCPlugin plugin) {
 		this.getConfiguration().getListenerManager().addListener(plugin);
 	}
 	
+	public void removePlugin(IRCPlugin plugin) {
+		this.getConfiguration().getListenerManager().removeListener(plugin); //Doesn't work?
+	}
+	
 	public void setVersion(String version) {
 		this.VER = version;
 	}
 
-	public void sendMessage(String channel, String message) {
+	public synchronized void sendMessage(String channel, String message) {
 		this.sendIRC().message(channel, message);
 	}
 	
-	public void sendNotice(String channel, String notice) {
+	public synchronized void sendNotice(String channel, String notice) {
 		this.sendIRC().notice(channel, notice);
 	}
 	
-	public void sendMessageToAll(String message){
+	public synchronized void sendMessageToAll(String message){
 		for (Channel c : this.getUserChannelDao().getAllChannels()) {
 			c.send().message(message);
 		}
 	}
 	
-	public void sendNoticeToAll(String notice) {
+	public synchronized void sendNoticeToAll(String notice) {
 		for (Channel c : this.getUserChannelDao().getAllChannels()) {
 			c.send().notice(notice);
 		}
 	}
 	
-	public void info(String message) {
+	public synchronized void info(String message) {
 		this.LOG.info(message);
 	}
 	
-	public void debug(String message) {
+	public synchronized void debug(String message) {
 		this.LOG.debug(message);
 	}
 	
-	public void error(String message) {
+	public synchronized void error(String message) {
 		this.LOG.error(message);
 	}
 	
-	public void warn(String message) {
+	public synchronized void warn(String message) {
 		this.LOG.warn(message);
+	}
+	
+	public void disconnect() {
+		this.stopBotReconnect();
+		this.sendRaw().rawLine("QUIT");
+		this.PLUGINS.removeAllPlugins();
+	}
+	
+	public void restart() {
+		this.sendRaw().rawLine("QUIT");
 	}
 	
 	public String getVersion() {
