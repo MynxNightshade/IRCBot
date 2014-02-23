@@ -1,92 +1,84 @@
 package me.iarekylew00t.ircbot.hooks;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import me.iarekylew00t.ircbot.managers.CommandManager;
-import me.iarekylew00t.utils.ColorUtils;
-
-import com.google.common.collect.ImmutableList.Builder;
-import com.google.common.collect.ImmutableList;
+import java.util.Arrays;
 
 public class Command {
-	private String CMD;
-	private ImmutableList<String> ARGS;
-	
-	public Command(String message) {
-		message = ColorUtils.removeColors(message);
-		
-		if (message.contains(" ")) {
-			this.CMD = message.substring(1, message.indexOf(" "));
-			String args = message.substring(message.indexOf(" ")).trim();
-			
-			if (!args.isEmpty()) {
-				Matcher m = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(args);
-				Builder<String> builder = ImmutableList.builder();
-				
-				while (m.find()) {
-					this.ARGS = builder.add(m.group(1).replaceAll("\"", "").trim()).build();
-				}
-				return;
-			}
-			this.ARGS = null;
-			return;
-		}
-		this.CMD = message.substring(1);
-		this.ARGS = null;
+	private String CMD, DESC;
+	private String[] ARGS, ALIAS;
+
+	public Command(String cmd, String[] args, String desc, String[] alias) {
+		this.CMD = cmd;
+		this.ARGS = args;
+		this.DESC = desc;
+		this.ALIAS = alias;
 	}
 	
-	public boolean hasArgs() {
-		if (this.ARGS != null && this.ARGS.size() != 0) {
+	public String getName() {
+		return this.CMD;
+	}
+	
+	public String[] getArgs() {
+		return this.ARGS;
+	}
+	
+	public String getDesc() {
+		return this.DESC;
+	}
+	
+	public String[] getAlias() {
+		return this.ALIAS;
+	}
+
+	public boolean equals(Command cmd) {
+		if (this.CMD.equals(cmd.getName())) {
 			return true;
+		}
+		for (int i = 0; i < this.ALIAS.length; i++) {
+			if (this.ALIAS[i].equals(cmd.getAlias()[i])) {
+				return true;
+			}
 		}
 		return false;
 	}
-	
-	public String getArg(int arg) {
-		if (arg > this.ARGS.size()) {
-			throw new IndexOutOfBoundsException();
+
+	public boolean equals(String cmd) {
+		if (this.CMD.equals(cmd)) {
+			return true;
 		}
-		return this.ARGS.get(arg);
+		for (int i = 0; i < this.ALIAS.length; i++) {
+			if (this.ALIAS[i].equals(cmd)) {
+				return true;
+			}
+		}
+		return false;
 	}
-	
-	public boolean containsArg(String arg) {
-		for (String args : this.ARGS) {
-			if (args.equals(arg)) {
+
+	public boolean equalsIgnoreCase(Command cmd) {
+		if (this.CMD.equalsIgnoreCase(cmd.getName())) {
+			return true;
+		}
+		for (int i = 0; i < this.ALIAS.length; i++) {
+			if (this.ALIAS[i].equalsIgnoreCase(cmd.getAlias()[i])) {
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	public String combineArgs() {
-		String fullArgs = "";
-		for (String args : this.ARGS) {
-			fullArgs += args + " ";
+	public boolean equalsIgnoreCase(String cmd) {
+		if (this.CMD.equalsIgnoreCase(cmd)) {
+			return true;
 		}
-		return fullArgs.trim();
-	}
-	
-	public String combineArgs(int start, int end) {
-		String fullArgs = "";
-		if (end > this.ARGS.size()) {
-			throw new IndexOutOfBoundsException();
+		for (int i = 0; i < this.ALIAS.length; i++) {
+			if (this.ALIAS[i].equalsIgnoreCase(cmd)) {
+				return true;
+			}
 		}
-		for (int i = start; i <= end; i++) {
-			fullArgs += this.ARGS.get(i) + " ";
-		}
-		return fullArgs.trim();
+		return false;
 	}
 	
-	public boolean isValidCmd() {
-		return CommandManager.isValidCmd(this.CMD);
-	}
-	
-	public String getCmd() {
-		return this.CMD;
-	}
-	
-	public ImmutableList getArgs() {
-		return this.ARGS;
+	@Override
+	public String toString() {
+		return this.CMD + "," + Arrays.toString(this.ARGS) + "," + this.DESC + "," + Arrays.toString(this.ALIAS);
 	}
 }
