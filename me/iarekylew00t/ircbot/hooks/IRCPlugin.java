@@ -1,32 +1,24 @@
 package me.iarekylew00t.ircbot.hooks;
 
-import java.util.HashMap;
-
 import me.iarekylew00t.ircbot.IRCBot;
-import me.iarekylew00t.ircbot.exceptions.PluginException;
+import me.iarekylew00t.ircbot.managers.DataManager;
 import me.iarekylew00t.ircbot.managers.PluginManager;
 
 import org.pircbotx.hooks.ListenerAdapter;
 import org.slf4j.Logger;
 
 public class IRCPlugin extends ListenerAdapter {
-	private String NAME, VER;
-	private HashMap<String, String> CMDS;
-	private Object[] PARAMS;
-	private IRCBot BOT = PluginManager.getBot();
-	private Logger LOG = PluginManager.getLogger();
+	private String PLUGIN, VER;
+	private CommandList CMDS;
+	private IRCBot BOT = DataManager.getBot();
+	private Logger LOG = DataManager.getLogger();
 	private boolean ENABLED = false;
 	
-	public IRCPlugin(String name, String version, HashMap commands) {
-		this(name, version, commands, new Object[0]);
-	}
-	
-	public IRCPlugin(String name, String version, HashMap<String, String> commands, Object... params) {
+	public IRCPlugin(String name, String version, CommandList commands) {
 		super();
-		this.NAME = name;
+		this.PLUGIN = name;
 		this.VER = version;
 		this.CMDS = commands;
-		this.PARAMS = params;
 		try {
 			this.LOG.info("Enabling " + name + " v" + version);
 			this.onEnable(); //Automatically run onEnable()
@@ -34,13 +26,26 @@ public class IRCPlugin extends ListenerAdapter {
 			this.ENABLED = true;
 		} catch (Exception ex) {
 			this.LOG.warn("Disabling " + name + " v" + version);
-			this.LOG.error("" + ex);
+			ex.printStackTrace();
 			this.onDisable(); //Automatically run onDisable() if an error occurs
-			try {
-				PluginManager.removePlugin(this);
-			} catch (PluginException e) { /*No harm*/ }
 			this.ENABLED = false;
 		}
+	}
+
+	public boolean equals(IRCPlugin plugin) {
+		return (this.PLUGIN.equals(plugin.getName()));
+	}
+
+	public boolean equals(String plugin) {
+		return (this.PLUGIN.equals(plugin));
+	}
+
+	public boolean equalsIgnoreCase(IRCPlugin plugin) {
+		return (this.PLUGIN.equalsIgnoreCase(plugin.getName()));
+	}
+	
+	public boolean equalsIgnoreCase(String plugin) {
+		return (this.PLUGIN.equalsIgnoreCase(plugin));
 	}
 	
 	public void onEnable() throws Exception {
@@ -54,23 +59,31 @@ public class IRCPlugin extends ListenerAdapter {
 	}
 	
 	public String getName() {
-		return this.NAME;
+		return this.PLUGIN;
 	}
 	
 	public String getVersion() {
 		return this.VER;
 	}
 	
-	public HashMap getCommands() {
+	public CommandList getCommands() {
 		return this.CMDS;
 	}
-	
-	public Object getParams() {
-		return this.PARAMS;
+
+	public void info(String message) {
+		this.LOG.info("[" + this.PLUGIN + "] " + message);
 	}
 	
-	public Object getParam(int index) {
-		return this.PARAMS[index];
+	public void debug(String message) {
+		this.LOG.debug("[" + this.PLUGIN + "] " + message);
+	}
+	
+	public void error(String message) {
+		this.LOG.error("[" + this.PLUGIN + "] " + message);
+	}
+	
+	public void warn(String message) {
+		this.LOG.warn("[" + this.PLUGIN + "] " + message);
 	}
 	
 	public IRCBot getBot() {
@@ -80,25 +93,9 @@ public class IRCPlugin extends ListenerAdapter {
 	public Logger getLogger() {
 		return this.LOG;
 	}
-
-	public void info(String message) {
-		this.LOG.info("[" + this.NAME + "] " + message);
-	}
-	
-	public void debug(String message) {
-		this.LOG.debug("[" + this.NAME + "] " + message);
-	}
-	
-	public void error(String message) {
-		this.LOG.error("[" + this.NAME + "] " + message);
-	}
-	
-	public void warn(String message) {
-		this.LOG.warn("[" + this.NAME + "] " + message);
-	}
 	
 	@Override
 	public String toString() {
-		return this.NAME + " (" + this.VER + ")";
+		return this.PLUGIN + " (" + this.VER + ")";
 	}
 }

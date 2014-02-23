@@ -1,6 +1,6 @@
 package me.iarekylew00t.ircbot.exceptions;
 
-public class PluginException extends Exception {
+public class PluginException extends RuntimeException {
 	private static final long serialVersionUID = -6550589076149552514L;
 
 	public PluginException() {
