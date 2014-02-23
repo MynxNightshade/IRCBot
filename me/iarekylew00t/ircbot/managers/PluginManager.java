@@ -25,13 +25,15 @@ public final class PluginManager {
 	public static void addPlugin(IRCPlugin plugin) throws PluginException {
 		if (!PLUGINS.contains(plugin)) {
 			PLUGINS.add(plugin);
+			return;
 		}
-		throw new PluginException(plugin + " is already a valid plugin");
+		throw new PluginException(plugin.getName() + " is already a valid plugin");
 	}
 	
 	public static void removePlugin(IRCPlugin plugin) throws PluginException {
 		if (!PLUGINS.contains(plugin)) {
 			PLUGINS.remove(plugin);
+			return;
 		}
 		throw new PluginException(plugin.getName() + " is not a valid plugin");
 	}
@@ -40,6 +42,7 @@ public final class PluginManager {
 		for (IRCPlugin plugin : PLUGINS) {
 			if (plugin.getName().equals(name)) {
 				PLUGINS.remove(plugin);
+				return;
 			}
 		}
 		throw new PluginException(name + " is not a valid plugin");
