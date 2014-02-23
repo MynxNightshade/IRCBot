@@ -2,6 +2,7 @@ package me.iarekylew00t.ircbot;
 
 import me.iarekylew00t.ircbot.managers.PluginManager;
 
+import org.pircbotx.Channel;
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
 import org.slf4j.Logger;
@@ -26,5 +27,25 @@ public class IRCBot extends PircBotX {
 	
 	public Logger getLogger() {
 		return this.LOG;
+	}
+
+	public void sendMessage(String channel, String message) {
+		this.sendIRC().message(channel, message);
+	}
+	
+	public void sendNotice(String channel, String notice) {
+		this.sendIRC().notice(channel, notice);
+	}
+	
+	public void sendMessageToAll(String message){
+		for (Channel c : this.getUserChannelDao().getAllChannels()) {
+			c.send().message(message);
+		}
+	}
+	
+	public void sendNoticeToAll(String notice) {
+		for (Channel c : this.getUserChannelDao().getAllChannels()) {
+			c.send().notice(notice);
+		}
 	}
 }

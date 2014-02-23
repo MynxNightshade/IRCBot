@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import org.pircbotx.hooks.events.MessageEvent;
 
+import me.iarekylew00t.ircbot.hooks.Command;
 import me.iarekylew00t.ircbot.hooks.IRCPlugin;
 
 public class TestPlugin extends IRCPlugin {
@@ -20,7 +21,6 @@ public class TestPlugin extends IRCPlugin {
 	
 	@Override
 	public void onEnable() {
-		this.info("This is a test" + 1/0);
 	}
 	
 	@Override
@@ -30,7 +30,9 @@ public class TestPlugin extends IRCPlugin {
 	@Override
 	public void onMessage(MessageEvent e) {
 		if (this.isEnabled() && e.getMessage().startsWith("$")) {
-			System.out.println(e.getMessage());
+			Command cmd = new Command(e.getMessage());
+			System.out.println(cmd.getCmd());
+			System.out.println(cmd.getArgs());
 		}
 	}
 }
