@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class PluginList {
+public final class PluginList {
 	private Set<IRCPlugin> PLUGINS;
 	
 	public PluginList() {
@@ -32,9 +32,13 @@ public class PluginList {
 		throw new NullPointerException("'" + plugin + "' is not a valid plugin");
 	}
 	
+	public void clear() {
+		this.PLUGINS.clear();
+	}
+	
 	public boolean contains(IRCPlugin plugin) {
 		for (IRCPlugin pl : this.PLUGINS) {
-			if (pl.equalsIgnoreCase(plugin)) {
+			if (pl.equals(plugin)) {
 				return true;
 			}
 		}
@@ -43,7 +47,7 @@ public class PluginList {
 	
 	public boolean contains(String plugin) {
 		for (IRCPlugin pl : this.PLUGINS) {
-			if (pl.equalsIgnoreCase(plugin)) {
+			if (pl.equals(plugin)) {
 				return true;
 			}
 		}
@@ -52,7 +56,7 @@ public class PluginList {
 	
 	public IRCPlugin get(String name) {
 		for (IRCPlugin pl : this.PLUGINS) {
-			if (pl.equalsIgnoreCase(name)) {
+			if (pl.equals(name)) {
 				return pl;
 			}
 		}

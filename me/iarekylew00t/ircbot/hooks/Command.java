@@ -1,84 +1,96 @@
 package me.iarekylew00t.ircbot.hooks;
 
-import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.pircbotx.User;
+
+import me.iarekylew00t.utils.ColorUtils;
+
+import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.ImmutableList;
 
 public class Command {
-	private String CMD, DESC;
-	private String[] ARGS, ALIAS;
-
-	public Command(String cmd, String[] args, String desc, String[] alias) {
-		this.CMD = cmd;
-		this.ARGS = args;
-		this.DESC = desc;
-		this.ALIAS = alias;
+	private String CMD;
+	private User USER;
+	private long DATE;
+	private ImmutableList<String> ARGS;
+	
+	public Command(String message) {
+		this(message, null);
 	}
 	
-	public String getName() {
+	public Command(String message, User user) {
+		message = ColorUtils.removeColors(message);
+		this.CMD = this.parseCmd(message);
+		this.ARGS = this.parseArgs(message);
+		this.USER = user;
+		this.DATE = System.currentTimeMillis();
+	}
+	
+	public boolean hasArgs() {
+		return (this.ARGS != null && this.ARGS.size() != 0 && !this.ARGS.isEmpty());
+	}
+	
+	public String getArg(int arg) {
+		return this.ARGS.get(arg);
+	}
+	
+	public String getCmd() {
 		return this.CMD;
 	}
 	
-	public String[] getArgs() {
+	public ImmutableList getArgs() {
 		return this.ARGS;
 	}
 	
-	public String getDesc() {
-		return this.DESC;
+	public User getUser() {
+		return this.USER;
 	}
 	
-	public String[] getAlias() {
-		return this.ALIAS;
-	}
-
-	public boolean equals(Command cmd) {
-		if (this.CMD.equals(cmd.getName())) {
-			return true;
-		}
-		for (int i = 0; i < this.ALIAS.length; i++) {
-			if (this.ALIAS[i].equals(cmd.getAlias()[i])) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public boolean equals(String cmd) {
-		if (this.CMD.equals(cmd)) {
-			return true;
-		}
-		for (int i = 0; i < this.ALIAS.length; i++) {
-			if (this.ALIAS[i].equals(cmd)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public boolean equalsIgnoreCase(Command cmd) {
-		if (this.CMD.equalsIgnoreCase(cmd.getName())) {
-			return true;
-		}
-		for (int i = 0; i < this.ALIAS.length; i++) {
-			if (this.ALIAS[i].equalsIgnoreCase(cmd.getAlias()[i])) {
-				return true;
-			}
-		}
-		return false;
+	public long getCreationDate() {
+		return this.DATE;
 	}
 	
-	public boolean equalsIgnoreCase(String cmd) {
-		if (this.CMD.equalsIgnoreCase(cmd)) {
-			return true;
+	public String combineArgs() {
+		String fullArgs = "";
+		for (String args : this.ARGS) {
+			fullArgs += args + " ";
 		}
-		for (int i = 0; i < this.ALIAS.length; i++) {
-			if (this.ALIAS[i].equalsIgnoreCase(cmd)) {
-				return true;
-			}
-		}
-		return false;
+		return fullArgs.trim();
 	}
 	
-	@Override
-	public String toString() {
-		return this.CMD + "," + Arrays.toString(this.ARGS) + "," + this.DESC + "," + Arrays.toString(this.ALIAS);
+	public String combineArgs(int start, int end) {
+		String fullArgs = "";
+		for (int i = start; i <= end; i++) {
+			fullArgs += this.ARGS.get(i) + " ";
+		}
+		return fullArgs.trim();
+	}
+	
+	private String parseCmd(String str) {
+		if (str.trim().contains(" ")) {
+			return str.substring(1, str.indexOf(" "));
+		}
+		return str.substring(1);
+	}
+	
+	private ImmutableList<String> parseArgs(String str) {
+		ImmutableList<String> list = null;
+		if (str.trim().contains(" ")) {
+			String args = str.substring(str.indexOf(" ")).trim();
+			if (!args.isEmpty()) {
+				Matcher m = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(args);
+				Builder<String> builder = ImmutableList.builder();
+				while (m.find()) {
+					list = builder.add(m.group(1).replaceAll("\"", "").trim()).build();
+				}
+			}
+		}
+		return list;
+	}
+	
+	public boolean isValidCmd() {
+		return CommandManager.contains(this.CMD);
 	}
 }
