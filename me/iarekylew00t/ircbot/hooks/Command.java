@@ -1,65 +1,57 @@
 package me.iarekylew00t.ircbot.hooks;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import me.iarekylew00t.ircbot.managers.CommandManager;
 import me.iarekylew00t.utils.ColorUtils;
 
-import org.pircbotx.User;
+import com.google.common.collect.ImmutableList.Builder;
+import com.google.common.collect.ImmutableList;
 
 public class Command {
-	private String _CMD;
-	private String[] _ARGS;
-	private String _USER;
+	private String CMD;
+	private ImmutableList<String> ARGS;
 	
 	public Command(String message) {
-		this(message, null);
-	}
-	
-	public Command(String message, User sender) {
-		/* Remove all colors from line */
 		message = ColorUtils.removeColors(message);
 		
-		if(sender != null) {
-			this._USER = sender.getNick();
-		} else {
-			this._USER = null;
-		}
-		
 		if (message.contains(" ")) {
-			this._CMD = message.substring(1, message.indexOf(" "));
-			String args = message.substring(message.indexOf(" "));
-			if (!isEmpty(args)) {
-				args = args.trim();
-				if (!args.equals("")) {
-					this._ARGS = args.split(" ");
-				} else { 
-					this._ARGS = null;
+			this.CMD = message.substring(1, message.indexOf(" "));
+			String args = message.substring(message.indexOf(" ")).trim();
+			
+			if (!args.isEmpty()) {
+				Matcher m = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(args);
+				Builder<String> builder = ImmutableList.builder();
+				
+				while (m.find()) {
+					this.ARGS = builder.add(m.group(1).replaceAll("\"", "").trim()).build();
 				}
+				return;
 			}
-		} else {
-			this._CMD = message.substring(1);
-			this._ARGS = null;
+			this.ARGS = null;
+			return;
 		}
+		this.CMD = message.substring(1);
+		this.ARGS = null;
 	}
 	
 	public boolean hasArgs() {
-		if (this._ARGS != null) {
-			if (this._ARGS.length != 0) {
-				return true;
-			}
-			return false;
+		if (this.ARGS != null && this.ARGS.size() != 0) {
+			return true;
 		}
 		return false;
 	}
 	
 	public String getArg(int arg) {
-		if (arg > this._ARGS.length) {
+		if (arg > this.ARGS.size()) {
 			throw new IndexOutOfBoundsException();
 		}
-		return this._ARGS[arg];
+		return this.ARGS.get(arg);
 	}
 	
 	public boolean containsArg(String arg) {
-		for (String args : this._ARGS) {
+		for (String args : this.ARGS) {
 			if (args.equals(arg)) {
 				return true;
 			}
@@ -69,7 +61,7 @@ public class Command {
 	
 	public String combineArgs() {
 		String fullArgs = "";
-		for (String args : this._ARGS) {
+		for (String args : this.ARGS) {
 			fullArgs += args + " ";
 		}
 		return fullArgs.trim();
@@ -77,35 +69,24 @@ public class Command {
 	
 	public String combineArgs(int start, int end) {
 		String fullArgs = "";
-		if (end > this._ARGS.length) {
+		if (end > this.ARGS.size()) {
 			throw new IndexOutOfBoundsException();
 		}
 		for (int i = start; i <= end; i++) {
-			fullArgs += this._ARGS[i] + " ";
+			fullArgs += this.ARGS.get(i) + " ";
 		}
 		return fullArgs.trim();
 	}
 	
 	public boolean isValidCmd() {
-		return CommandList.isValidCmd(this._CMD);
-	}
-	
-	public String getSender() {
-		return this._USER;
+		return CommandManager.isValidCmd(this.CMD);
 	}
 	
 	public String getCmd() {
-		return this._CMD;
+		return this.CMD;
 	}
 	
-	public String[] getArgs() {
-		return this._ARGS;
-	}
-	
-	private static boolean isEmpty(String cmd) {
-		if (cmd.replace("\\s", "").isEmpty()) {
-			return true;
-		}
-		return false;
+	public ImmutableList getArgs() {
+		return this.ARGS;
 	}
 }
