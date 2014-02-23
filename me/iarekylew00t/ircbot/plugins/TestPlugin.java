@@ -1,18 +1,18 @@
 package me.iarekylew00t.ircbot.plugins;
 
-import java.util.HashMap;
-
 import org.pircbotx.hooks.events.MessageEvent;
 
-import me.iarekylew00t.ircbot.hooks.Command;
+import me.iarekylew00t.ircbot.hooks.CommandList;
+import me.iarekylew00t.ircbot.hooks.IRCCommand;
 import me.iarekylew00t.ircbot.hooks.IRCPlugin;
 
 public class TestPlugin extends IRCPlugin {
 	private static final String NAME = "TestPlugin", VER = "1.0.0";
-	private static HashMap<String, String> CMDS = new HashMap<String, String>();
+	private static CommandList CMDS = new CommandList();
 	static {
 		//Add Commands here
-		CMDS.put("test", "$test");
+		CMDS.add("test", "", "A basic test command.", "t");
+		CMDS.add("test2", "<arg0>,<arg1>,[arg2]", "Another basic test plugin w/ arguments", "t2");
 	}
 	
 	public TestPlugin() {
@@ -30,7 +30,7 @@ public class TestPlugin extends IRCPlugin {
 	@Override
 	public void onMessage(MessageEvent e) {
 		if (this.isEnabled() && e.getMessage().startsWith("$")) {
-			Command cmd = new Command(e.getMessage());
+			IRCCommand cmd = new IRCCommand(e.getMessage());
 			System.out.println(cmd.getCmd());
 			System.out.println(cmd.getArgs());
 		}
