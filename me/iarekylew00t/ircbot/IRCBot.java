@@ -1,6 +1,7 @@
 package me.iarekylew00t.ircbot;
 
-import me.iarekylew00t.ircbot.managers.PluginManager;
+import me.iarekylew00t.ircbot.hooks.IRCPlugin;
+import me.iarekylew00t.ircbot.managers.DataManager;
 
 import org.pircbotx.Channel;
 import org.pircbotx.Configuration;
@@ -14,19 +15,15 @@ public class IRCBot extends PircBotX {
 
 	public IRCBot(Configuration configuration) {
 		super(configuration);
-		new PluginManager(this);
+		new DataManager(this);
+	}
+	
+	public void addPlugin(IRCPlugin plugin) {
+		this.getConfiguration().getListenerManager().addListener(plugin);
 	}
 	
 	public void setVersion(String version) {
 		this.VER = version;
-	}
-	
-	public String getVersion() {
-		return this.VER;
-	}
-	
-	public Logger getLogger() {
-		return this.LOG;
 	}
 
 	public void sendMessage(String channel, String message) {
@@ -47,5 +44,29 @@ public class IRCBot extends PircBotX {
 		for (Channel c : this.getUserChannelDao().getAllChannels()) {
 			c.send().notice(notice);
 		}
+	}
+	
+	public void info(String message) {
+		this.LOG.info(message);
+	}
+	
+	public void debug(String message) {
+		this.LOG.debug(message);
+	}
+	
+	public void error(String message) {
+		this.LOG.error(message);
+	}
+	
+	public void warn(String message) {
+		this.LOG.warn(message);
+	}
+	
+	public String getVersion() {
+		return this.VER;
+	}
+	
+	public Logger getLogger() {
+		return this.LOG;
 	}
 }
