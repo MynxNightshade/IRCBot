@@ -3,21 +3,20 @@ package me.iarekylew00t.ircbot.hooks;
 import java.util.UUID;
 
 import org.pircbotx.hooks.ListenerAdapter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class IRCPlugin extends ListenerAdapter {
-	private String PLUGIN, VER;
+	private String PLUGIN, VER, ID, AUTHOR;
 	private CommandList CMDS;
-	private Logger LOG = LoggerFactory.getLogger(IRCPlugin.class);
+	private PluginLogger LOG;
 	private boolean ENABLED = false;
-	private String ID;
 	
-	public IRCPlugin(String name, String version, CommandList commands) {
+	public IRCPlugin(String name, String version, CommandList commands, String author) {
 		super();
+		this.LOG = new PluginLogger(this);
 		this.PLUGIN = name;
 		this.VER = version;
 		this.CMDS = commands;
+		this.AUTHOR = author;
 		this.ID = UUID.randomUUID().toString().split("-")[0]; //Generate a random ID
 		try {
 			this.onEnable(); //Automatically run onEnable()
@@ -33,7 +32,7 @@ public class IRCPlugin extends ListenerAdapter {
 				//Plugin was already removed
 			} catch (Exception ex1) {
 				ex1.printStackTrace();
-				this.warn("Error disabling " + name + " v" + version);
+				this.log().warn("Error disabling " + name + " v" + version);
 			}
 		}
 	}
@@ -60,24 +59,16 @@ public class IRCPlugin extends ListenerAdapter {
 		return this.CMDS;
 	}
 	
+	public String getAuthor() {
+		return this.AUTHOR;
+	}
+	
 	public String getID() {
 		return this.ID;
 	}
-
-	public synchronized void info(String message) {
-		this.LOG.info("[" + this.PLUGIN + "] " + message);
-	}
 	
-	public synchronized void debug(String message) {
-		this.LOG.debug("[" + this.PLUGIN + "] " + message);
-	}
-	
-	public synchronized void error(String message) {
-		this.LOG.error("[" + this.PLUGIN + "] " + message);
-	}
-	
-	public synchronized void warn(String message) {
-		this.LOG.warn("[" + this.PLUGIN + "] " + message);
+	public PluginLogger log() {
+		return this.LOG;
 	}
 
 	public boolean equals(IRCPlugin plugin) {
@@ -86,10 +77,6 @@ public class IRCPlugin extends ListenerAdapter {
 
 	public boolean equals(String plugin) {
 		return (this.PLUGIN.equalsIgnoreCase(plugin));
-	}
-	
-	public Logger getLogger() {
-		return this.LOG;
 	}
 	
 	@Override

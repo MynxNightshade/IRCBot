@@ -31,19 +31,20 @@ public class PluginManager {
 		CommandManager.removeCmds(getPlugin(plugin).getCommands());
 		BOT.removePlugin(getPlugin(plugin));
 	}
-	protected static IRCPlugin getPlugin(String plugin) {
+	
+	public static IRCPlugin getPlugin(String plugin) {
 		return PLUGINS.get(plugin);
 	}
 	
-	protected static boolean contains(String plugin) {
+	public static boolean contains(String plugin) {
 		return PLUGINS.contains(plugin);
 	}
 	
-	protected static int totalPlugins() {
+	public static int totalPlugins() {
 		return PLUGINS.size();
 	}
 	
-	protected static PluginList getPlugins() {
+	public static PluginList getPlugins() {
 		return PLUGINS;
 	}
 	

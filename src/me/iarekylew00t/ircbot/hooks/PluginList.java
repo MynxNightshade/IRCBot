@@ -3,6 +3,7 @@ package me.iarekylew00t.ircbot.hooks;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 public final class PluginList {
 	private Set<IRCPlugin> PLUGINS;
@@ -11,8 +12,8 @@ public final class PluginList {
 		this.PLUGINS = new HashSet<IRCPlugin>();
 	}
 
-	public void add(String name, String version, CommandList commands) {
-		this.add(new IRCPlugin(name, version, commands));
+	public void add(String name, String version, CommandList commands, String author) {
+		this.add(new IRCPlugin(name, version, commands, author));
 	}
 
 	public void add(IRCPlugin plugin) {
@@ -69,6 +70,10 @@ public final class PluginList {
 	
 	public Set<IRCPlugin> toSet() {
 		return this.PLUGINS;
+	}
+	
+	public Set<IRCPlugin> sort() {
+		return new TreeSet(this.PLUGINS);
 	}
 	
 	@Override
