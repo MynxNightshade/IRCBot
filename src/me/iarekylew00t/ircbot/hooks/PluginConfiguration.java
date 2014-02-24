@@ -45,7 +45,7 @@ public class PluginConfiguration {
 			if (!this.CONFIG.exists()) { this.CONFIG.createNewFile(); this.FIRST = true; }
 			this.PROPS.load(new FileInputStream(this.CONFIG));
 		} catch (Exception e) {
-			this.PLUGIN.warn("Error loading configuration file.");
+			this.PLUGIN.log().warn("Error loading configuration file.");
 			e.printStackTrace();
 		}
 	}
@@ -54,7 +54,7 @@ public class PluginConfiguration {
 		try {
 			this.PROPS.store(new FileOutputStream(this.CONFIG), this.PLUGIN.getName() + " v" + this.PLUGIN.getVersion() + " Configuration File");
 		} catch (Exception e) {
-			this.PLUGIN.warn("Error saving configuration file.");
+			this.PLUGIN.log().warn("Error saving configuration file.");
 			e.printStackTrace();
 		}
 	}
