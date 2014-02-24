@@ -10,9 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class IRCBot extends PircBotX {
+	private final Logger LOG = LoggerFactory.getLogger(IRCBot.class);
 	private String VER = "1.0.0";
 	private PluginManager PLUGINS;
-	private final Logger LOG = LoggerFactory.getLogger(IRCBot.class);
 
 	public IRCBot(Configuration configuration) {
 		super(configuration);

@@ -11,8 +11,10 @@ public class IRCBotMain {
 	private static IRCBot BOT;
 	
 	public static void main(String[] args) throws Exception {
+		/* Read IRC config file */
 		IRCConfiguration config = new IRCConfiguration();
 		if (config.firstTimeLoad()) {
+			/* Create default config*/
 			config.setProp("nick", "IRCBot");
 			config.setProp("nickPass", "");
 			config.setProp("login", "PircBotX");
@@ -23,6 +25,7 @@ public class IRCBotMain {
 			config.setProp("identServ", "false");
 			config.update();
 		}
+		
 		Configuration botConfig = new Configuration.Builder()
 			/* Hardcoded Settings */
 			.setEncoding(Charset.forName("UTF-8"))

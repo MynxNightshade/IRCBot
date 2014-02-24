@@ -3,13 +3,13 @@ package me.iarekylew00t.ircbot.plugins;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import me.iarekylew00t.ircbot.IRCBot;
-import me.iarekylew00t.ircbot.hooks.CommandList;
 import me.iarekylew00t.ircbot.hooks.Command;
+import me.iarekylew00t.ircbot.hooks.CommandList;
 import me.iarekylew00t.ircbot.hooks.IRCPlugin;
 import me.iarekylew00t.ircbot.hooks.PluginConfiguration;
 
 public class TestPlugin extends IRCPlugin {
-	private static final String NAME = "TestPlugin", VER = "1.0.0";
+	private static final String NAME = "TestPlugin", VER = "1.0.0", AUTHOR = "TestAuthor";
 	private static PluginConfiguration CONFIG;
 	private static IRCBot BOT;
 	private static CommandList CMDS = new CommandList();
@@ -22,13 +22,13 @@ public class TestPlugin extends IRCPlugin {
 	}
 	
 	public TestPlugin(IRCBot bot) {
-		super(NAME, VER, CMDS);
+		super(NAME, VER, CMDS, AUTHOR);
 		BOT = bot;
 	}
 	
 	@Override
 	public void onEnable() {
-		this.info("Enabling " + NAME + " v" + VER);
+		this.log().info("Enabling " + NAME + " v" + VER);
 		CONFIG = new PluginConfiguration(this);
 		if (CONFIG.firstTimeLoad()) {
 			CONFIG.setProp("testProp", "123");
@@ -39,7 +39,7 @@ public class TestPlugin extends IRCPlugin {
 	
 	@Override
 	public void onDisable() {
-		this.info("Disabling " + NAME + " v" + VER);
+		this.log().info("Disabling " + NAME + " v" + VER);
 	}
 
 	@Override
@@ -48,7 +48,12 @@ public class TestPlugin extends IRCPlugin {
 			Command cmd = new Command(e.getMessage(), e.getUser());
 			
 			if (cmd.getCmd().equals("test") || cmd.getCmd().equals("t")) {
-				e.respond("Working!");
+				e.getChannel().send().message("Nick: " + e.getUser().getNick());
+				e.getChannel().send().message("Verified: " + e.getUser().isVerified());
+				e.getChannel().send().message("Login: " + e.getUser().getLogin());
+				e.getChannel().send().message("Hostmask: " + e.getUser().getHostmask());
+				e.getChannel().send().message("Real Name: " + e.getUser().getRealName());
+				e.getChannel().send().message("UUID: " + e.getUser().getUserId());
 				return;
 			}
 			if (cmd.getCmd().equals("test2")) {
