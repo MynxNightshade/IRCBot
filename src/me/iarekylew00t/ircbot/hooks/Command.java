@@ -52,6 +52,10 @@ public class Command {
 		return this.DATE;
 	}
 	
+	public IRCCommand getIRCCmd() {
+		return CommandManager.getCmd(this.CMD);
+	}
+	
 	public String combineArgs() {
 		String fullArgs = "";
 		for (String args : this.ARGS) {

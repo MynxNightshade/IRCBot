@@ -3,6 +3,7 @@ package me.iarekylew00t.ircbot.hooks;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 public final class CommandList {
 	private Set<IRCCommand> CMDS = new HashSet<IRCCommand>();
@@ -52,7 +53,7 @@ public final class CommandList {
 	
 	public IRCCommand get(String name) {
 		for (IRCCommand cmd : this.CMDS) {
-			if (cmd.equals(name)) {
+			if (cmd.equals(name) || cmd.isAlias(name)) {
 				return cmd;
 			}
 		}
@@ -65,6 +66,10 @@ public final class CommandList {
 	
 	public Set<IRCCommand> toSet() {
 		return this.CMDS;
+	}
+	
+	public Set<IRCCommand> sort() {
+		return new TreeSet(this.CMDS);
 	}
 	
 	@Override
