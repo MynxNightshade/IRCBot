@@ -13,7 +13,7 @@ public final class CommandManager {
 	}
 	
 	protected static void addCmds(CommandList cmds) {
-		for (IRCCommand c : cmds.toSet()) {
+		for (IRCCommand c : cmds.toList()) {
 			CommandManager.addCmd(c);
 		}
 	}
@@ -27,7 +27,7 @@ public final class CommandManager {
 	}
 	
 	protected static void removeCmds(CommandList cmds) {
-		for (IRCCommand c : cmds.toSet()) {
+		for (IRCCommand c : cmds.toList()) {
 			CommandManager.removeCmd(c);
 		}
 	}
@@ -53,6 +53,7 @@ public final class CommandManager {
 	}
 	
 	public static CommandList getCmds() {
+		CMDS.sort();
 		return CMDS;
 	}
 }

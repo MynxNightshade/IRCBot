@@ -49,7 +49,7 @@ public class PluginManager {
 	}
 	
 	public void removeAllPlugins() {
-		for (IRCPlugin p : PLUGINS.toSet()) {
+		for (IRCPlugin p : PLUGINS.toList()) {
 			p.onDisable();
 		}
 		PLUGINS.clear();

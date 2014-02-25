@@ -1,15 +1,22 @@
 package me.iarekylew00t.ircbot.hooks;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public final class PluginList {
-	private Set<IRCPlugin> PLUGINS;
+	private List<IRCPlugin> PLUGINS;
+	private static Comparator<IRCPlugin> ALPHABETICAL_ORDER = new Comparator<IRCPlugin>() {
+		@Override
+		public int compare(IRCPlugin pl1, IRCPlugin pl2) {
+			return pl1.getName().compareTo(pl2.getName());
+		}
+	};
 	
 	public PluginList() {
-		this.PLUGINS = new HashSet<IRCPlugin>();
+		this.PLUGINS = new ArrayList<IRCPlugin>();
 	}
 
 	public void add(String name, String version, CommandList commands, String author) {
@@ -68,12 +75,12 @@ public final class PluginList {
 		return this.PLUGINS.size();
 	}
 	
-	public Set<IRCPlugin> toSet() {
+	public List<IRCPlugin> toList() {
 		return this.PLUGINS;
 	}
 	
-	public Set<IRCPlugin> sort() {
-		return new TreeSet(this.PLUGINS);
+	public void sort() {
+		Collections.sort(this.PLUGINS, ALPHABETICAL_ORDER);
 	}
 	
 	@Override

@@ -54,6 +54,6 @@ public class IRCCommand {
 	
 	@Override
 	public String toString() {
-		return this.CMD + " (" + this.ID + ")";
+		return this.CMD;
 	}
 }

@@ -1,12 +1,19 @@
 package me.iarekylew00t.ircbot.hooks;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public final class CommandList {
-	private Set<IRCCommand> CMDS = new HashSet<IRCCommand>();
+	private List<IRCCommand> CMDS = new ArrayList<IRCCommand>();
+	private static Comparator<IRCCommand> ALPHABETICAL_ORDER = new Comparator<IRCCommand>() {
+		@Override
+		public int compare(IRCCommand cmd1, IRCCommand cmd2) {
+			return cmd1.getName().compareTo(cmd2.getName());
+		}
+	};
 	
 	public void add(String cmd, String args, String desc, String alias) {
 		this.add(new IRCCommand(cmd, args.split(","), desc, alias.split(",")));
@@ -64,12 +71,12 @@ public final class CommandList {
 		return this.CMDS.size();
 	}
 	
-	public Set<IRCCommand> toSet() {
+	public List<IRCCommand> toList() {
 		return this.CMDS;
 	}
 	
-	public Set<IRCCommand> sort() {
-		return new TreeSet(this.CMDS);
+	public void sort() {
+		Collections.sort(this.CMDS, ALPHABETICAL_ORDER);
 	}
 	
 	@Override
