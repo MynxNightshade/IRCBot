@@ -5,6 +5,7 @@ import org.pircbotx.hooks.events.MessageEvent;
 import me.iarekylew00t.ircbot.IRCBot;
 import me.iarekylew00t.ircbot.hooks.Command;
 import me.iarekylew00t.ircbot.hooks.CommandList;
+import me.iarekylew00t.ircbot.hooks.CommandManager;
 import me.iarekylew00t.ircbot.hooks.IRCPlugin;
 import me.iarekylew00t.ircbot.hooks.PluginConfiguration;
 
@@ -48,12 +49,13 @@ public class TestPlugin extends IRCPlugin {
 			Command cmd = new Command(e.getMessage(), e.getUser());
 			
 			if (cmd.getCmd().equals("test") || cmd.getCmd().equals("t")) {
-				e.getChannel().send().message("Nick: " + e.getUser().getNick());
+				/*e.getChannel().send().message("Nick: " + e.getUser().getNick());
 				e.getChannel().send().message("Verified: " + e.getUser().isVerified());
 				e.getChannel().send().message("Login: " + e.getUser().getLogin());
 				e.getChannel().send().message("Hostmask: " + e.getUser().getHostmask());
 				e.getChannel().send().message("Real Name: " + e.getUser().getRealName());
-				e.getChannel().send().message("UUID: " + e.getUser().getUserId());
+				e.getChannel().send().message("UUID: " + e.getUser().getUserId());*/
+				e.respond("" + CommandManager.getCmds());
 				return;
 			}
 			if (cmd.getCmd().equals("test2")) {
