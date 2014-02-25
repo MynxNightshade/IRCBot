@@ -48,6 +48,10 @@ public class Command {
 		return this.USER;
 	}
 	
+	public Channel getChannel() {
+		return this.CHAN;
+	}
+	
 	public long getCreationDate() {
 		return this.DATE;
 	}
@@ -56,29 +60,12 @@ public class Command {
 		return CommandManager.getCmd(this.CMD);
 	}
 	
-	public int getPermissionLevel() {
+	public int requiredPermissionLevel() {
 		return this.getIRCCmd().getPermissionLevel();
 	}
 	
 	public boolean hasPermission() {
-		switch (this.getPermissionLevel()) {
-		case IRC.IRC_OP:
-			return this.USER.isIrcop();
-		case IRC.OWNER:
-			return this.USER.getChannelsOwnerIn().contains(this.CHAN);
-		case IRC.SUPER_OP:
-			return this.USER.getChannelsSuperOpIn().contains(this.CHAN);
-		case IRC.OP:
-			return this.USER.getChannelsOpIn().contains(this.CHAN);
-		case IRC.HALF_OP:
-			return this.USER.getChannelsHalfOpIn().contains(this.CHAN);
-		case IRC.VOICE:
-			return this.USER.getChannelsVoiceIn().contains(this.CHAN);
-		case IRC.NORMAL:
-			return this.USER.getChannels().contains(this.CHAN);
-		default:
-			return false;
-		}
+		return IRC.getPermissionLevel(this.USER, this.CHAN) >= this.requiredPermissionLevel();
 	}
 	
 	public boolean isValid() {
