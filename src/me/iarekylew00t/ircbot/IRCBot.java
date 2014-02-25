@@ -6,6 +6,7 @@ import me.iarekylew00t.ircbot.hooks.PluginManager;
 import org.pircbotx.Channel;
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
+import org.pircbotx.hooks.ListenerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +22,10 @@ public class IRCBot extends PircBotX {
 	
 	public void addPlugin(IRCPlugin plugin) {
 		this.getConfiguration().getListenerManager().addListener(plugin);
+	}
+	
+	public void addListener(ListenerAdapter listener) {
+		this.getConfiguration().getListenerManager().addListener(listener);
 	}
 	
 	public void removePlugin(IRCPlugin plugin) {
