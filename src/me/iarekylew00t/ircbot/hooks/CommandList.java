@@ -73,6 +73,10 @@ public final class CommandList {
 		throw new NullPointerException("'" + name + "' is not a valid command");
 	}
 	
+	public IRCCommand get(int index) {
+		return this.CMDS.get(index);
+	}
+	
 	public String list() {
 		return this.list(IRC.IRC_OP);
 	}

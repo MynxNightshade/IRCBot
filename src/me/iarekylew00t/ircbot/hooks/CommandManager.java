@@ -1,8 +1,12 @@
 package me.iarekylew00t.ircbot.hooks;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.iarekylew00t.ircbot.exceptions.CommandException;
 
 public final class CommandManager {
+	private static final int PAGE = 50;
 	private static CommandList CMDS = new CommandList();
 	
 	public static void addCmd(IRCCommand cmd) {
@@ -62,6 +66,23 @@ public final class CommandManager {
 			usage += " " + arg;
 		}
 		return usage.trim();
+	}
+	
+	public static int getTotalPages() {
+		int pages = CMDS.size() / PAGE;
+		if (CMDS.size() % PAGE > 0) { pages++; }
+		return pages;
+	}
+	
+	public static List<IRCCommand> getPage(int page) {
+		if (page > getTotalPages()) { throw new IndexOutOfBoundsException(); }
+		List<IRCCommand> list = new ArrayList<IRCCommand>();
+		int max = CMDS.size(), index = PAGE * (page-1);
+		if (index > max) { index = max; }
+		for (int i = index; i < max; i++) {
+			list.add(CMDS.get(i));
+		}
+		return list;
 	}
 	
 	public static CommandList getCmds() {

@@ -71,6 +71,10 @@ public final class PluginList {
 		throw new NullPointerException("'" + name + "' is not a valid plugin");
 	}
 	
+	public IRCPlugin get(int index) {
+		return this.PLUGINS.get(index);
+	}
+	
 	public int size() {
 		return this.PLUGINS.size();
 	}

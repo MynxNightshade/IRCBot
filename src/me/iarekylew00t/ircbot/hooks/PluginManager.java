@@ -1,9 +1,13 @@
 package me.iarekylew00t.ircbot.hooks;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import me.iarekylew00t.ircbot.IRCBot;
 import me.iarekylew00t.ircbot.exceptions.PluginException;
 
 public class PluginManager {
+	private static final int PAGE = 50;
 	private static PluginList PLUGINS;
 	private static IRCBot BOT;
 	
@@ -43,6 +47,23 @@ public class PluginManager {
 	
 	public static boolean contains(String plugin) {
 		return PLUGINS.contains(plugin);
+	}
+	
+	public static int getTotalPages() {
+		int pages = PLUGINS.size() / PAGE;
+		if (PLUGINS.size() % PAGE > 0) { pages++; }
+		return pages;
+	}
+	
+	public static List<IRCPlugin> getPage(int page) {
+		if (page > getTotalPages()) { throw new IndexOutOfBoundsException(); }
+		List<IRCPlugin> list = new ArrayList<IRCPlugin>();
+		int max = PLUGINS.size(), index = PAGE * (page-1);
+		if (index > max) { index = max; }
+		for (int i = index; i < max; i++) {
+			list.add(PLUGINS.get(i));
+		}
+		return list;
 	}
 	
 	public static int totalPlugins() {
