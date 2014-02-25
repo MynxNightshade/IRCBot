@@ -65,9 +65,42 @@ public class CommandListener extends ListenerAdapter {
 				e.respond("Aradiabot v" + this.BOT.getVersion());
 				return;
 			case "commands":
-				
+				int maxCmds = CommandManager.getTotalPages();
+				if (cmd.hasArgs()) {
+					int page;
+					try {
+						page = Integer.parseInt(cmd.combineArgs());
+					} catch (Exception ex) {
+						e.respond("Please enter a valid number from 1-" + maxCmds);
+						return;
+					}
+					if (page > maxCmds) {
+						e.respond("Please enter a number from 1-" + maxCmds);
+						return;
+					}
+					cmd.getUser().send().notice("Commands (" + page + "/" + CommandManager.getTotalPages() + "): " + Arrays.toString(CommandManager.getPage(page).toArray()));
+					return;
+				}
+				cmd.getUser().send().notice("Commands (1/" + maxCmds + "): " + Arrays.toString(CommandManager.getPage(1).toArray()));
+				return;
 			case "plugins":
-				
+				int maxPlugins = PluginManager.getTotalPages();
+				if (cmd.hasArgs()) {
+					int page;
+					try {
+						page = Integer.parseInt(cmd.combineArgs());
+					} catch (Exception ex) {
+						e.respond("Please enter a valid number from 1-" + maxPlugins);
+						return;
+					}
+					if (page > maxPlugins) {
+						e.respond("Please enter a number from 1-" + maxPlugins);
+					}
+					cmd.getUser().send().notice("Plugins (" + page + "/" + PluginManager.getTotalPages() + "): " + Arrays.toString(PluginManager.getPage(page).toArray()));
+					return;
+				}
+				cmd.getUser().send().notice("Plugins (1/" + maxPlugins + "): " + Arrays.toString(PluginManager.getPage(1).toArray()));
+				return;
 			case "reboot":
 				if (cmd.hasPermission()) {
 					if (!cmd.hasArgs()) {
