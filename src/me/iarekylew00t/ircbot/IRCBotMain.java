@@ -46,6 +46,7 @@ public class IRCBotMain {
 		
 		/* BEGIN PLUGINS */
 		BOT.addPlugin(new TestPlugin(BOT));
+		BOT.addPlugin(new BasicCommandPlugin());
 		
 		BOT.startBot(); //transformers roll out
 	}
