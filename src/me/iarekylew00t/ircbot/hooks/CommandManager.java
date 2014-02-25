@@ -5,14 +5,14 @@ import me.iarekylew00t.ircbot.exceptions.CommandException;
 public final class CommandManager {
 	private static CommandList CMDS = new CommandList();
 	
-	protected static void addCmd(IRCCommand cmd) {
+	public static void addCmd(IRCCommand cmd) {
 		if (CMDS.contains(cmd)) {
 			throw new CommandException("'" + cmd.getName() + "' is already a valid command");
 		}
 		CMDS.add(cmd);
 	}
 	
-	protected static void addCmds(CommandList cmds) {
+	public static void addCmds(CommandList cmds) {
 		for (IRCCommand c : cmds.toList()) {
 			CommandManager.addCmd(c);
 		}
@@ -50,6 +50,18 @@ public final class CommandManager {
 	
 	public static int totalCmds() {
 		return CMDS.size();
+	}
+	
+	public static String getUsage(IRCCommand cmd) {
+		return CommandManager.getUsage(cmd.getName());
+	}
+	
+	public static String getUsage(String cmd) {
+		String usage = "$" + cmd;
+		for (String arg : CMDS.get(cmd).getArgs()) {
+			usage += " " + arg;
+		}
+		return usage.trim();
 	}
 	
 	public static CommandList getCmds() {

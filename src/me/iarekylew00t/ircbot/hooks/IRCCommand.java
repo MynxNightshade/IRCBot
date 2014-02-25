@@ -1,17 +1,23 @@
 package me.iarekylew00t.ircbot.hooks;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 public class IRCCommand {
 	private String CMD, DESC;
-	private String[] ARGS, ALIAS;
+	private List<String> ARGS, ALIAS;
 	private String ID;
+	private int PERM;
 
-	public IRCCommand(String cmd, String[] args, String desc, String[] alias) {
+	public IRCCommand(String cmd, String[] args, String desc, String[] alias, int perm) {
+		if (perm < 0 || perm > 6) { throw new IllegalArgumentException("Command permission must be >= 0 and <= 6"); }
 		this.CMD = cmd;
-		this.ARGS = args;
+		this.ARGS = Arrays.asList(args);
 		this.DESC = desc;
-		this.ALIAS = alias;
+		this.PERM = perm;
+		this.ALIAS = Arrays.asList(alias);
 		this.ID = UUID.randomUUID().toString().split("-")[0]; //Generate a random ID
 	}
 	
@@ -19,20 +25,32 @@ public class IRCCommand {
 		return this.CMD;
 	}
 	
-	public String[] getArgs() {
-		return this.ARGS;
+	public List<String> getArgs() {
+		return Collections.unmodifiableList(this.ARGS);
 	}
 	
 	public String getDesc() {
 		return this.DESC;
 	}
 	
-	public String[] getAlias() {
-		return this.ALIAS;
+	public List<String> getAlias() {
+		return Collections.unmodifiableList(this.ALIAS);
+	}
+	
+	public int getPermissionLevel() {
+		return this.PERM;
 	}
 	
 	public String getID() {
 		return this.ID;
+	}
+	
+	public boolean hasArgs() {
+		return this.ARGS != null && this.ARGS.size() != 0 && !this.ARGS.isEmpty();
+	}
+	
+	public boolean hasAlias() {
+		return this.ALIAS != null && this.ALIAS.size() != 0 && !this.ALIAS.isEmpty();
 	}
 
 	public boolean equals(IRCCommand cmd) {
@@ -44,8 +62,8 @@ public class IRCCommand {
 	}
 	
 	public boolean isAlias(String cmd) {
-		for (int i = 0; i < this.ALIAS.length; i++) {
-			if (this.ALIAS[i].equalsIgnoreCase(cmd)) {
+		for (int i = 0; i < this.ALIAS.size(); i++) {
+			if (this.ALIAS.get(i).equalsIgnoreCase(cmd)) {
 				return true;
 			}
 		}

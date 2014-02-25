@@ -1,35 +1,35 @@
 package me.iarekylew00t.ircbot.hooks;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.pircbotx.Channel;
+import org.pircbotx.Colors;
 import org.pircbotx.User;
 
-import me.iarekylew00t.utils.ColorUtils;
-
-import com.google.common.collect.ImmutableList.Builder;
-import com.google.common.collect.ImmutableList;
+import me.iarekylew00t.ircbot.utils.IRC;
 
 public class Command {
 	private String CMD;
 	private User USER;
+	private Channel CHAN;
 	private long DATE;
-	private ImmutableList<String> ARGS;
+	private List<String> ARGS;
 	
-	public Command(String message) {
-		this(message, null);
-	}
-	
-	public Command(String message, User user) {
-		message = ColorUtils.removeColors(message);
+	public Command(String message, User user, Channel channel) {
+		message = Colors.removeFormattingAndColors(message);
 		this.CMD = this.parseCmd(message);
 		this.ARGS = this.parseArgs(message);
 		this.USER = user;
+		this.CHAN = channel;
 		this.DATE = System.currentTimeMillis();
 	}
 	
 	public boolean hasArgs() {
-		return (this.ARGS != null && this.ARGS.size() != 0 && !this.ARGS.isEmpty());
+		return this.ARGS != null && this.ARGS.size() != 0 && !this.ARGS.isEmpty();
 	}
 	
 	public String getArg(int arg) {
@@ -40,7 +40,7 @@ public class Command {
 		return this.CMD;
 	}
 	
-	public ImmutableList getArgs() {
+	public List<String> getArgs() {
 		return this.ARGS;
 	}
 	
@@ -54,6 +54,39 @@ public class Command {
 	
 	public IRCCommand getIRCCmd() {
 		return CommandManager.getCmd(this.CMD);
+	}
+	
+	public int getPermissionLevel() {
+		return this.getIRCCmd().getPermissionLevel();
+	}
+	
+	public boolean hasPermission() {
+		switch (this.getPermissionLevel()) {
+		case IRC.IRC_OP:
+			return this.USER.isIrcop();
+		case IRC.OWNER:
+			return this.USER.getChannelsOwnerIn().contains(this.CHAN);
+		case IRC.SUPER_OP:
+			return this.USER.getChannelsSuperOpIn().contains(this.CHAN);
+		case IRC.OP:
+			return this.USER.getChannelsOpIn().contains(this.CHAN);
+		case IRC.HALF_OP:
+			return this.USER.getChannelsHalfOpIn().contains(this.CHAN);
+		case IRC.VOICE:
+			return this.USER.getChannelsVoiceIn().contains(this.CHAN);
+		case IRC.NORMAL:
+			return this.USER.getChannels().contains(this.CHAN);
+		default:
+			return false;
+		}
+	}
+	
+	public boolean isValid() {
+		return CommandManager.contains(this.CMD);
+	}
+	
+	public String getUsage() {
+		return CommandManager.getUsage(this.getIRCCmd());
 	}
 	
 	public String combineArgs() {
@@ -79,22 +112,17 @@ public class Command {
 		return str.substring(1);
 	}
 	
-	private ImmutableList<String> parseArgs(String str) {
-		ImmutableList<String> list = null;
+	private List<String> parseArgs(String str) {
+		List<String> list = new ArrayList<String>();
 		if (str.trim().contains(" ")) {
 			String args = str.substring(str.indexOf(" ")).trim();
 			if (!args.isEmpty()) {
 				Matcher m = Pattern.compile("([^\"]\\S*|\".+?\")\\s*").matcher(args);
-				Builder<String> builder = ImmutableList.builder();
 				while (m.find()) {
-					list = builder.add(m.group(1).replaceAll("\"", "").trim()).build();
+					list.add(m.group(1).replaceAll("\"", "").trim());
 				}
 			}
 		}
-		return list;
-	}
-	
-	public boolean isValidCmd() {
-		return CommandManager.contains(this.CMD);
+		return Collections.unmodifiableList(list);
 	}
 }

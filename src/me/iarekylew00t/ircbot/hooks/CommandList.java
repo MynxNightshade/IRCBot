@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import me.iarekylew00t.ircbot.utils.IRC;
+
 public final class CommandList {
 	private List<IRCCommand> CMDS = new ArrayList<IRCCommand>();
 	private static Comparator<IRCCommand> ALPHABETICAL_ORDER = new Comparator<IRCCommand>() {
@@ -16,7 +18,11 @@ public final class CommandList {
 	};
 	
 	public void add(String cmd, String args, String desc, String alias) {
-		this.add(new IRCCommand(cmd, args.split(","), desc, alias.split(",")));
+		this.add(cmd, args, desc, alias, IRC.NORMAL);
+	}
+	
+	public void add(String cmd, String args, String desc, String alias, int perm) {
+		this.add(new IRCCommand(cmd, (args.isEmpty() || args.equals(null) ? new String[0] : args.split(",")), desc, (alias.isEmpty() || alias.equals(null) ? new String[0] : alias.split(",")), perm));
 	}
 
 	public void add(IRCCommand cmd) {
@@ -67,12 +73,26 @@ public final class CommandList {
 		throw new NullPointerException("'" + name + "' is not a valid command");
 	}
 	
-	public int size() {
-		return this.CMDS.size();
+	public String list() {
+		return this.list(IRC.IRC_OP);
+	}
+	
+	public String list(int perm) {
+		String list = "";
+		for (IRCCommand c : this.CMDS) {
+			if (perm >= c.getPermissionLevel()) {
+				list += c.getName() + " ";
+			}
+		}
+		return list.trim();
 	}
 	
 	public List<IRCCommand> toList() {
-		return this.CMDS;
+		return Collections.unmodifiableList(this.CMDS);
+	}
+	
+	public int size() {
+		return this.CMDS.size();
 	}
 	
 	public void sort() {
