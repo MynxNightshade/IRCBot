@@ -7,7 +7,8 @@ import me.iarekylew00t.ircbot.hooks.Command;
 import me.iarekylew00t.ircbot.hooks.CommandList;
 import me.iarekylew00t.ircbot.hooks.CommandManager;
 import me.iarekylew00t.ircbot.hooks.IRCPlugin;
-import me.iarekylew00t.ircbot.hooks.PluginConfiguration;
+import me.iarekylew00t.ircbot.utils.IRC;
+import me.iarekylew00t.ircbot.utils.PluginConfiguration;
 
 public class TestPlugin extends IRCPlugin {
 	private static final String NAME = "TestPlugin", VER = "1.0.0", AUTHOR = "TestAuthor";
@@ -46,7 +47,7 @@ public class TestPlugin extends IRCPlugin {
 	@Override
 	public void onMessage(MessageEvent e) {
 		if (this.isEnabled() && e.getMessage().startsWith("$")) {
-			Command cmd = new Command(e.getMessage(), e.getUser());
+			Command cmd = new Command(e.getMessage(), e.getUser(), e.getChannel());
 			
 			if (cmd.getCmd().equals("test") || cmd.getCmd().equals("t")) {
 				/*e.getChannel().send().message("Nick: " + e.getUser().getNick());
@@ -55,7 +56,9 @@ public class TestPlugin extends IRCPlugin {
 				e.getChannel().send().message("Hostmask: " + e.getUser().getHostmask());
 				e.getChannel().send().message("Real Name: " + e.getUser().getRealName());
 				e.getChannel().send().message("UUID: " + e.getUser().getUserId());*/
-				e.respond("" + CommandManager.getCmds());
+				e.respond("" + CommandManager.getCmds().list(IRC.NORMAL));
+				e.respond("" + CommandManager.getCmds().list(IRC.VOICE));
+				e.respond("" + CommandManager.getCmds().list(IRC.OP));
 				return;
 			}
 			if (cmd.getCmd().equals("test2")) {
@@ -63,7 +66,7 @@ public class TestPlugin extends IRCPlugin {
 					e.respond("You said: " + cmd.combineArgs());
 					return;
 				}
-				e.respond("You didn't say anything.");
+				e.respond(cmd.getUsage());
 				return;
 			}
 			 if (cmd.getCmd().equals("restart")) {

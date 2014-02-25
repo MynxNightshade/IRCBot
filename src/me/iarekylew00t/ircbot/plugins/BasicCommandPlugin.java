@@ -34,7 +34,6 @@ public class BasicCommandPlugin extends IRCPlugin {
 		CMDS.add("source","","Provides a link to Aradiabot's source code.","src,git");
 		CMDS.add("songlist","","Provides a link to Skaianet's songlist.","");
 		CMDS.add("ping","[url]","Tests your latency with the server or tests a websites response time if a URL is given.","");
-		CMDS.add("$","","Seriously... Did you think that would actually do something? Honestly.","");
 	}
 	
 	public BasicCommandPlugin() {
@@ -44,14 +43,10 @@ public class BasicCommandPlugin extends IRCPlugin {
 	@Override
 	public void onMessage(MessageEvent e) {
 		if (this.isEnabled() && e.getMessage().startsWith("$")) {
-			Command cmd = new Command(e.getMessage(), e.getUser());
+			Command cmd = new Command(e.getMessage(), e.getUser(), e.getChannel());
 			
 			if (cmd.getCmd().equals("8ball")) {
 				//TODO Write 8-ball command
-				return;
-			}
-			if (cmd.getCmd().equals("$")) {
-				e.respond(cmd.getIRCCmd().getDesc());
 				return;
 			}
 		}
