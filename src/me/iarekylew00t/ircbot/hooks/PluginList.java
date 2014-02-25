@@ -76,7 +76,7 @@ public final class PluginList {
 	}
 	
 	public List<IRCPlugin> toList() {
-		return this.PLUGINS;
+		return Collections.unmodifiableList(this.PLUGINS);
 	}
 	
 	public void sort() {

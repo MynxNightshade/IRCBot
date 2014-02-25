@@ -12,7 +12,7 @@ public class PluginManager {
 		BOT = bot;
 	}
 	
-	protected static void addPlugin(IRCPlugin plugin) {
+	public static void addPlugin(IRCPlugin plugin) {
 		if (PLUGINS.contains(plugin)) {
 			throw new PluginException("'" + plugin.getName() + "' is already a valid plugin");
 		}
@@ -32,6 +32,11 @@ public class PluginManager {
 		BOT.removePlugin(getPlugin(plugin));
 	}
 	
+	public void removeAllPlugins() {
+		for (IRCPlugin p : PLUGINS.toList()) { p.onDisable(); }
+		PLUGINS.clear();
+	}
+	
 	public static IRCPlugin getPlugin(String plugin) {
 		return PLUGINS.get(plugin);
 	}
@@ -45,14 +50,8 @@ public class PluginManager {
 	}
 	
 	public static PluginList getPlugins() {
+		PLUGINS.sort();
 		return PLUGINS;
-	}
-	
-	public void removeAllPlugins() {
-		for (IRCPlugin p : PLUGINS.toList()) {
-			p.onDisable();
-		}
-		PLUGINS.clear();
 	}
 	
 }
