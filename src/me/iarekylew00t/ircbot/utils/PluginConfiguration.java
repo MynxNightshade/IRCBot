@@ -1,9 +1,11 @@
-package me.iarekylew00t.ircbot.hooks;
+package me.iarekylew00t.ircbot.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Properties;
+
+import me.iarekylew00t.ircbot.hooks.IRCPlugin;
 
 public class PluginConfiguration {
 	private Properties PROPS = new Properties();

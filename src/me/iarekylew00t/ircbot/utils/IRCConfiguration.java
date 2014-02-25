@@ -1,4 +1,4 @@
-package me.iarekylew00t.ircbot;
+package me.iarekylew00t.ircbot.utils;
 
 import java.io.File;
 import java.io.FileInputStream;
