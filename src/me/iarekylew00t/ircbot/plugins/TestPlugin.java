@@ -19,8 +19,6 @@ public class TestPlugin extends IRCPlugin {
 		//Add Commands here
 		CMDS.add("test", "", "A basic test command.", "t");
 		CMDS.add("test2", "<arg0>,<arg1>,[arg2]", "Another basic test plugin w/ arguments", "t2");
-		CMDS.add("restart", "", "Disconnects the bot and then reconnects.", "");
-		CMDS.add("shutdown", "", "Disables all plugins and shutsdown the bot.", "");
 	}
 	
 	public TestPlugin(IRCBot bot) {

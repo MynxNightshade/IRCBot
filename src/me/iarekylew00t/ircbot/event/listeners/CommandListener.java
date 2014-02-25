@@ -7,6 +7,9 @@ import me.iarekylew00t.ircbot.hooks.Command;
 import me.iarekylew00t.ircbot.hooks.CommandList;
 import me.iarekylew00t.ircbot.hooks.CommandManager;
 import me.iarekylew00t.ircbot.hooks.IRCCommand;
+import me.iarekylew00t.ircbot.hooks.IRCPlugin;
+import me.iarekylew00t.ircbot.hooks.PluginManager;
+import me.iarekylew00t.ircbot.utils.IRC;
 
 import org.pircbotx.Colors;
 import org.pircbotx.hooks.ListenerAdapter;
@@ -19,6 +22,11 @@ public class CommandListener extends ListenerAdapter {
 	private IRCBot BOT;
 	private static CommandList CMDS = new CommandList();
 	static {
+		CMDS.add("version","","Displays the current version of Aradiabot.","ver");
+		CMDS.add("commands","[page]","Displays all of Aradiabot's commands.","cmd");
+		CMDS.add("plugins","[page]","Displays all of Aradiabot's plugins.","pl");
+		CMDS.add("reboot","","Disconnects Aradiabot from the IRC and then reconnects.","", IRC.OP);
+		CMDS.add("shutdown","","Disconnects Aradaibot from the IRC and shutdowns all active plugins before exiting.","", IRC.OP);
 		CMDS.add("help","<command>","The help command provides information about commands. To get help with a command, type \"$help <command>\".","");
 	}
 	
@@ -29,7 +37,7 @@ public class CommandListener extends ListenerAdapter {
 	
 	@Override
 	public void onMessage(MessageEvent e) {
-		if (e.getMessage().startsWith("$")) {
+		if (e.getMessage().startsWith("#")) {
 			Command cmd = new Command(e.getMessage(), e.getUser(), e.getChannel());
 
 			if (cmd.hasArgs()) {
@@ -43,7 +51,48 @@ public class CommandListener extends ListenerAdapter {
 				return;
 			}
 			
-			if (cmd.getCmd().equals("help")) {
+			switch(cmd.getCmd()) {
+			case "version":
+				if (cmd.hasArgs()) {
+					if (PluginManager.contains(cmd.combineArgs())) {
+						IRCPlugin ircPlugin = PluginManager.getPlugin(cmd.combineArgs());
+						e.respond(ircPlugin.getName() + " v" + ircPlugin.getVersion());
+						return;
+					}
+					e.respond("'" + cmd.combineArgs() + "' is not a valid plugin.");
+					return;
+				}
+				e.respond("Aradiabot v" + this.BOT.getVersion());
+				return;
+			case "commands":
+				
+			case "plugins":
+				
+			case "reboot":
+				if (cmd.hasPermission()) {
+					if (!cmd.hasArgs()) {
+						cmd.getChannel().send().notice(Colors.BOLD + "----- REBOOTING -----");
+						this.BOT.restart();
+						return;
+					}
+					e.respond("Usage: " + cmd.getUsage());
+					return;
+				}
+				e.respond(Colors.RED + Colors.BOLD + "You don't have permission to do that.");
+				return;
+			case "shutdown":
+				if (cmd.hasPermission()) {
+					if (!cmd.hasArgs()) {
+						cmd.getChannel().send().notice(Colors.BOLD + "----- SHUTTING DOWN -----");
+						this.BOT.disconnect();
+						return;
+					}
+					e.respond("Usage: " + cmd.getUsage());
+					return;
+				}
+				e.respond(Colors.RED + Colors.BOLD + "You don't have permission to do that.");
+				return;
+			case "help":
 				if (cmd.hasArgs()) {
 					if (CommandManager.contains(cmd.combineArgs())) {
 						IRCCommand ircCmd = CommandManager.getCmd(cmd.combineArgs());
