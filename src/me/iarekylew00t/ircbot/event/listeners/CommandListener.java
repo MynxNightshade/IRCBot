@@ -46,10 +46,10 @@ public class CommandListener extends ListenerAdapter {
 				this.LOG.info(cmd.getUser().getNick() + " issued command: " + cmd.getCmd());
 			}
 
-			if (!cmd.isValid()) {
+			/*if (!cmd.isValid()) {
 				e.respond("'" + cmd.getCmd() + "' is not a valid command.");
 				return;
-			}
+			}*/
 			
 			switch(cmd.getCmd()) {
 			case "version":

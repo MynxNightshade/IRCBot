@@ -1,5 +1,7 @@
 package me.iarekylew00t.ircbot.plugins;
 
+import org.pircbotx.Channel;
+import org.pircbotx.User;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import me.iarekylew00t.ircbot.hooks.Command;
@@ -40,7 +42,7 @@ public class BasicCommandPlugin extends IRCPlugin {
 		super(NAME, VER, CMDS, AUTHOR);
 	}
 	
-	@Override
+	/*@Override
 	public void onMessage(MessageEvent e) {
 		if (this.isEnabled() && e.getMessage().startsWith("$")) {
 			Command cmd = new Command(e.getMessage(), e.getUser(), e.getChannel());
@@ -49,6 +51,14 @@ public class BasicCommandPlugin extends IRCPlugin {
 				//TODO Write 8-ball command
 				return;
 			}
+		}
+	}*/
+
+	@Override
+	public void onCommand(User sender, Channel channel, String cmd, Object[] args) {
+		if(cmd.equalsIgnoreCase("8ball")) {
+			channel.send().message("Workings great!");
+			return;
 		}
 	}
 

@@ -19,10 +19,6 @@ public final class PluginList {
 		this.PLUGINS = new ArrayList<IRCPlugin>();
 	}
 
-	public void add(String name, String version, CommandList commands, String author) {
-		this.add(new IRCPlugin(name, version, commands, author));
-	}
-
 	public void add(IRCPlugin plugin) {
 		this.PLUGINS.add(plugin);
 	}

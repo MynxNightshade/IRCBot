@@ -1,5 +1,7 @@
 package me.iarekylew00t.ircbot.plugins;
 
+import org.pircbotx.Channel;
+import org.pircbotx.User;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import me.iarekylew00t.ircbot.IRCBot;
@@ -76,5 +78,12 @@ public class TestPlugin extends IRCPlugin {
 				return;
 			}
 		}
+	}
+
+	@Override
+	public void onCommand(User sender, Channel channel, String cmd,
+			Object[] args) {
+		// TODO Auto-generated method stub
+		
 	}
 }

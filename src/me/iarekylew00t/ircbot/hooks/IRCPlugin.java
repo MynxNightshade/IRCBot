@@ -2,9 +2,12 @@ package me.iarekylew00t.ircbot.hooks;
 
 import java.util.UUID;
 
+import org.pircbotx.Channel;
+import org.pircbotx.User;
 import org.pircbotx.hooks.ListenerAdapter;
+import org.pircbotx.hooks.events.MessageEvent;
 
-public class IRCPlugin extends ListenerAdapter {
+public abstract class IRCPlugin extends ListenerAdapter {
 	private String PLUGIN, VER, ID, AUTHOR;
 	private CommandList CMDS;
 	private PluginLogger LOG;
@@ -36,6 +39,22 @@ public class IRCPlugin extends ListenerAdapter {
 			}
 		}
 	}
+	
+	//WORK IN PROGRESS
+	@Override
+	public void onMessage(MessageEvent e) {
+		if (e.getMessage().startsWith("$")) {
+			Command cmd = new Command(e.getMessage(), e.getUser(), e.getChannel());
+			if (cmd.isValid()) {
+				this.onCommand(e.getUser(), e.getChannel(), cmd.getCmd(), cmd.getArgs().toArray());
+				return;
+			}
+			e.respond("'" + cmd.getCmd() + "' is not a valid command.");
+			return;
+		}
+	}
+	
+	public abstract void onCommand(User sender, Channel channel, String cmd, Object[] args);
 	
 	public void onEnable() throws Exception {
 	}
