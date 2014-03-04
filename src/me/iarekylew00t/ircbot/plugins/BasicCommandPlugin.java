@@ -1,9 +1,8 @@
 package me.iarekylew00t.ircbot.plugins;
 
-import org.pircbotx.Channel;
-import org.pircbotx.User;
-import org.pircbotx.hooks.events.MessageEvent;
+import java.awt.Color;
 
+import me.iarekylew00t.ircbot.CommandSender;
 import me.iarekylew00t.ircbot.hooks.Command;
 import me.iarekylew00t.ircbot.hooks.CommandList;
 import me.iarekylew00t.ircbot.hooks.IRCPlugin;
@@ -41,23 +40,25 @@ public class BasicCommandPlugin extends IRCPlugin {
 	public BasicCommandPlugin() {
 		super(NAME, VER, CMDS, AUTHOR);
 	}
-	
-	/*@Override
-	public void onMessage(MessageEvent e) {
-		if (this.isEnabled() && e.getMessage().startsWith("$")) {
-			Command cmd = new Command(e.getMessage(), e.getUser(), e.getChannel());
-			
-			if (cmd.getCmd().equals("8ball")) {
-				//TODO Write 8-ball command
-				return;
-			}
-		}
-	}*/
 
 	@Override
-	public void onCommand(User sender, Channel channel, String cmd, Object[] args) {
-		if(cmd.equalsIgnoreCase("8ball")) {
-			channel.send().message("Workings great!");
+	public void onEnable() {
+		this.log().info("Starting BasicCommandPlugin v" + VER + "...");
+	}
+
+	@Override
+	public void onDisable() {
+		this.log().info("Disabling BasicCommandPlugin...");		
+	}
+
+	@Override
+	public void onCommand(Command command, CommandSender sender, String[] args) {
+		if(command.getName().equalsIgnoreCase("8ball")) {
+			if (!sender.hasPermission(command.getPermission())) {
+				sender.sendMessage(Color.PINK + "You do not have permission to do that.");
+				return;
+			}
+			sender.respond("Works!");
 			return;
 		}
 	}

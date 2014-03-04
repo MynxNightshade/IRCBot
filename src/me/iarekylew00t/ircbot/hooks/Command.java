@@ -1,6 +1,7 @@
 package me.iarekylew00t.ircbot.hooks;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -17,7 +18,7 @@ public class Command {
 	private User USER;
 	private Channel CHAN;
 	private long DATE;
-	private List<String> ARGS;
+	private String[] ARGS;
 	
 	public Command(String message, User user, Channel channel) {
 		message = Colors.removeFormattingAndColors(message);
@@ -29,23 +30,15 @@ public class Command {
 	}
 	
 	public boolean hasArgs() {
-		return this.ARGS != null && this.ARGS.size() != 0 && !this.ARGS.isEmpty();
+		return this.ARGS != null && this.ARGS.length != 0;
 	}
 	
-	public String getArg(int arg) {
-		return this.ARGS.get(arg);
-	}
-	
-	public String getCmd() {
+	public String getName() {
 		return this.CMD;
 	}
 	
-	public List<String> getArgs() {
+	public String[] getArgs() {
 		return this.ARGS;
-	}
-	
-	public User getUser() {
-		return this.USER;
 	}
 	
 	public Channel getChannel() {
@@ -60,12 +53,8 @@ public class Command {
 		return CommandManager.getCmd(this.CMD);
 	}
 	
-	public int requiredPermissionLevel() {
+	public int getPermission() {
 		return this.getIRCCmd().getPermissionLevel();
-	}
-	
-	public boolean hasPermission() {
-		return IRC.getPermissionLevel(this.USER, this.CHAN) >= this.requiredPermissionLevel();
 	}
 	
 	public boolean isValid() {
@@ -76,22 +65,6 @@ public class Command {
 		return CommandManager.getUsage(this.getIRCCmd());
 	}
 	
-	public String combineArgs() {
-		String fullArgs = "";
-		for (String args : this.ARGS) {
-			fullArgs += args + " ";
-		}
-		return fullArgs.trim();
-	}
-	
-	public String combineArgs(int start, int end) {
-		String fullArgs = "";
-		for (int i = start; i <= end; i++) {
-			fullArgs += this.ARGS.get(i) + " ";
-		}
-		return fullArgs.trim();
-	}
-	
 	private String parseCmd(String str) {
 		if (str.trim().contains(" ")) {
 			return str.substring(1, str.indexOf(" "));
@@ -99,8 +72,8 @@ public class Command {
 		return str.substring(1);
 	}
 	
-	private List<String> parseArgs(String str) {
-		List<String> list = new ArrayList<String>();
+	private String[] parseArgs(String str) {
+		List list = new ArrayList<String>();
 		if (str.trim().contains(" ")) {
 			String args = str.substring(str.indexOf(" ")).trim();
 			if (!args.isEmpty()) {
@@ -110,6 +83,6 @@ public class Command {
 				}
 			}
 		}
-		return Collections.unmodifiableList(list);
+		return (String[])list.toArray();
 	}
 }

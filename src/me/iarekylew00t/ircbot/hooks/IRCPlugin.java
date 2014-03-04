@@ -2,8 +2,8 @@ package me.iarekylew00t.ircbot.hooks;
 
 import java.util.UUID;
 
-import org.pircbotx.Channel;
-import org.pircbotx.User;
+import me.iarekylew00t.ircbot.CommandSender;
+
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.MessageEvent;
 
@@ -25,18 +25,13 @@ public abstract class IRCPlugin extends ListenerAdapter {
 			this.onEnable(); //Automatically run onEnable()
 			PluginManager.addPlugin(this);
 			this.ENABLED = true;
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		} catch (Exception eException) {
+			eException.printStackTrace();
 			try {
 				PluginManager.removePlugin(this);
 				this.onDisable(); //Automatically run onDisable() if an error occurs
 				this.ENABLED = false;
-			} catch (NullPointerException ex1) {
-				//Plugin was already removed
-			} catch (Exception ex1) {
-				ex1.printStackTrace();
-				this.log().warn("Error disabling " + name + " v" + version);
-			}
+			} catch (NullPointerException dException) { /*Plugin was already removed*/ }
 		}
 	}
 	
@@ -45,22 +40,19 @@ public abstract class IRCPlugin extends ListenerAdapter {
 	public void onMessage(MessageEvent e) {
 		if (e.getMessage().startsWith("$")) {
 			Command cmd = new Command(e.getMessage(), e.getUser(), e.getChannel());
+			CommandSender sender = new CommandSender(e.getUser(), e.getChannel());
 			if (cmd.isValid()) {
-				this.onCommand(e.getUser(), e.getChannel(), cmd.getCmd(), cmd.getArgs().toArray());
+				this.onCommand(cmd, sender, cmd.getArgs());
 				return;
 			}
-			e.respond("'" + cmd.getCmd() + "' is not a valid command.");
+			e.respond("'" + cmd.getName() + "' is not a valid command.");
 			return;
 		}
 	}
 	
-	public abstract void onCommand(User sender, Channel channel, String cmd, Object[] args);
-	
-	public void onEnable() throws Exception {
-	}
-	
-	public void onDisable() {
-	}
+	public abstract void onCommand(Command command, CommandSender sender, String[] args);
+	public abstract void onEnable();
+	public abstract void onDisable();
 	
 	public boolean isEnabled() {
 		return this.ENABLED;

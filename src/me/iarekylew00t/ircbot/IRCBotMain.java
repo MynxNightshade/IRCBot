@@ -47,7 +47,6 @@ public class IRCBotMain {
 		BOT.addListener(new CommandListener(BOT));
 		
 		/* BEGIN PLUGINS */
-		BOT.addPlugin(new TestPlugin(BOT));
 		BOT.addPlugin(new BasicCommandPlugin());
 		
 		BOT.startBot(); //transformers roll out

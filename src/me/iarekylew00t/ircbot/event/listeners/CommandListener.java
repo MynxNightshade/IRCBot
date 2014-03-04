@@ -41,17 +41,17 @@ public class CommandListener extends ListenerAdapter {
 			Command cmd = new Command(e.getMessage(), e.getUser(), e.getChannel());
 
 			if (cmd.hasArgs()) {
-				this.LOG.info(cmd.getUser().getNick() + " issued command: " + cmd.getCmd() + " " + cmd.getArgs());
+				this.LOG.info(cmd.getUser().getNick() + " issued command: " + cmd.getName() + " " + cmd.getArgs());
 			} else {
-				this.LOG.info(cmd.getUser().getNick() + " issued command: " + cmd.getCmd());
+				this.LOG.info(cmd.getUser().getNick() + " issued command: " + cmd.getName());
 			}
 
 			/*if (!cmd.isValid()) {
 				e.respond("'" + cmd.getCmd() + "' is not a valid command.");
 				return;
-			}*/
+			}
 			
-			switch(cmd.getCmd()) {
+			switch(cmd.getName()) {
 			case "version":
 				if (cmd.hasArgs()) {
 					if (PluginManager.contains(cmd.combineArgs())) {
@@ -137,7 +137,7 @@ public class CommandListener extends ListenerAdapter {
 				}
 				e.respond(cmd.getIRCCmd().getDesc());
 				return;
-			}
+			}*/
 		}
 	}
 }
