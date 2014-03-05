@@ -2,8 +2,8 @@ package me.iarekylew00t.ircbot.plugins;
 
 import java.awt.Color;
 
+import me.iarekylew00t.ircbot.Command;
 import me.iarekylew00t.ircbot.CommandSender;
-import me.iarekylew00t.ircbot.hooks.Command;
 import me.iarekylew00t.ircbot.hooks.CommandList;
 import me.iarekylew00t.ircbot.hooks.IRCPlugin;
 

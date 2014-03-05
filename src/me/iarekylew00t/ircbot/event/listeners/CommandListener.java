@@ -2,8 +2,8 @@ package me.iarekylew00t.ircbot.event.listeners;
 
 import java.util.Arrays;
 
+import me.iarekylew00t.ircbot.Command;
 import me.iarekylew00t.ircbot.IRCBot;
-import me.iarekylew00t.ircbot.hooks.Command;
 import me.iarekylew00t.ircbot.hooks.CommandList;
 import me.iarekylew00t.ircbot.hooks.CommandManager;
 import me.iarekylew00t.ircbot.hooks.IRCCommand;

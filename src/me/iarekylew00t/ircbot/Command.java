@@ -1,48 +1,40 @@
-package me.iarekylew00t.ircbot.hooks;
+package me.iarekylew00t.ircbot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.pircbotx.Channel;
 import org.pircbotx.Colors;
-import org.pircbotx.User;
-
-import me.iarekylew00t.ircbot.utils.IRC;
+import me.iarekylew00t.ircbot.hooks.CommandManager;
+import me.iarekylew00t.ircbot.hooks.IRCCommand;
 
 public class Command {
 	private String CMD;
-	private User USER;
-	private Channel CHAN;
 	private long DATE;
 	private String[] ARGS;
 	
-	public Command(String message, User user, Channel channel) {
+	public Command(String message) {
 		message = Colors.removeFormattingAndColors(message);
 		this.CMD = this.parseCmd(message);
 		this.ARGS = this.parseArgs(message);
-		this.USER = user;
-		this.CHAN = channel;
 		this.DATE = System.currentTimeMillis();
-	}
-	
-	public boolean hasArgs() {
-		return this.ARGS != null && this.ARGS.length != 0;
 	}
 	
 	public String getName() {
 		return this.CMD;
 	}
 	
+	public String getUsage() {
+		return CommandManager.getUsage(this.getIRCCmd());
+	}
+	
 	public String[] getArgs() {
 		return this.ARGS;
 	}
 	
-	public Channel getChannel() {
-		return this.CHAN;
+	public int getPermission() {
+		return this.getIRCCmd().getPermissionLevel();
 	}
 	
 	public long getCreationDate() {
@@ -53,16 +45,12 @@ public class Command {
 		return CommandManager.getCmd(this.CMD);
 	}
 	
-	public int getPermission() {
-		return this.getIRCCmd().getPermissionLevel();
-	}
-	
 	public boolean isValid() {
 		return CommandManager.contains(this.CMD);
 	}
 	
-	public String getUsage() {
-		return CommandManager.getUsage(this.getIRCCmd());
+	public boolean hasArgs() {
+		return this.ARGS != null && this.ARGS.length != 0;
 	}
 	
 	private String parseCmd(String str) {

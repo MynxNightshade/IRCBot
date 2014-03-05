@@ -2,6 +2,7 @@ package me.iarekylew00t.ircbot.hooks;
 
 import java.util.UUID;
 
+import me.iarekylew00t.ircbot.Command;
 import me.iarekylew00t.ircbot.CommandSender;
 
 import org.pircbotx.hooks.ListenerAdapter;
@@ -39,7 +40,7 @@ public abstract class IRCPlugin extends ListenerAdapter {
 	@Override
 	public void onMessage(MessageEvent e) {
 		if (e.getMessage().startsWith("$")) {
-			Command cmd = new Command(e.getMessage(), e.getUser(), e.getChannel());
+			Command cmd = new Command(e.getMessage());
 			CommandSender sender = new CommandSender(e.getUser(), e.getChannel());
 			if (cmd.isValid()) {
 				this.onCommand(cmd, sender, cmd.getArgs());
